@@ -1,6 +1,7 @@
 Used Ganache to connect with  the remix platform and change the remix's environment to Dev -Ganache provider and change the "Ganache JSON-RPC Endpoint" from http://127.0.0.1:8545  ==> http://127.0.0.1:7545 to connect the platform with ganache and In python code change the from address and contract address(take the addresses from remix) and make sure u have sqlite3 support path given in edit your system environment(available in control panel).Now after changing the from and contract addresses run the python code on command prompt or in any of python tools and U can create a medicine record by signing in(if u r a new user) and after enter u r user name and password to select the further details. The code connects with blockchain platform and temporarily stores u r created records in it and i used user_database.db for storing login the details(my code also connected parallelly to the database).
  main.
 
+
 STEPS:
 Firstly run Ganache
 Then open remix and run smart contract
@@ -11,3 +12,7 @@ Make sure u have sqlite3 in u r system
 
 
 NOTE: I HAD ATTACHED ALL THE IMAGES TO EXCECUTE THE CODE CLEARLY AND IT CAN BE DEVELOPED FURTHER AS AN APPLICATION BY ADDING SOME MORE ACTORS TO IT.
+
+AND
+
+FOLLOW THE IMAGES I UPLOADED IN MY GITHUB REPOSITORY INORDER.....
