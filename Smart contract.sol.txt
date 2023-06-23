@@ -1,0 +1,160 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.4.26;
+
+contract SmartContract {
+    struct Manufacturer {
+        uint Manufacturer_Id;
+        string medicine_name;
+        string manufacturer;
+        uint256 price;
+        string manufacturing_date;
+        string expiry_date;
+        uint256 batch_number;
+    }
+    struct Warehouse{
+        uint Warehouse_Id;
+        string Warehouse_Name;
+        string Warehouse_Type;
+        uint Size;
+        string Climate;
+        string ControlMaintenance;
+        string OwnerContact;
+    }
+   struct Retailer{
+        uint Retailer_Id;
+        string Retailer_Name;
+        string Retailer_Type;
+        string Description;
+        string Address;
+        string Contact;
+    }
+    mapping(uint256 => Manufacturer) manufac;
+    mapping(uint256 => Warehouse) warehouse;
+    mapping(uint256 => Retailer) retailer;
+
+    function setDetails1(
+        uint256 medicine_id,
+        uint256 manufacturer_id,
+        string memory medicine_name_,
+        string memory manufacturer_,
+        uint256 price_,
+        string memory manufacturing_date_,
+        string memory expiry_date_,
+        uint256 batch_number_
+    ) public {
+        manufac[medicine_id].Manufacturer_Id =manufacturer_id;
+        manufac[medicine_id].medicine_name = medicine_name_;
+        manufac[medicine_id].manufacturer = manufacturer_;
+        manufac[medicine_id].price = price_;
+        manufac[medicine_id].manufacturing_date = manufacturing_date_;
+        manufac[medicine_id].expiry_date = expiry_date_;
+        manufac[medicine_id].batch_number = batch_number_;
+    }
+
+    function getDetails1(uint256 medicine_id)
+        public
+        view
+        returns (
+            string memory,
+            string memory,
+            uint256,
+            string memory,
+            string memory,
+            uint256
+        )
+    {
+        return (
+            manufac[medicine_id].medicine_name,
+            manufac[medicine_id].manufacturer,
+            manufac[medicine_id].price,
+            manufac[medicine_id].manufacturing_date,
+            manufac[medicine_id].expiry_date,
+            manufac[medicine_id].batch_number
+        );
+    }
+
+
+    function setDetails2(
+        uint256 medicine_id,
+        uint256 warehouse_id,
+        string warehouse_name,
+        string warehouse_type,
+        uint size,
+        string climate,
+        string controlmaintenance,
+        string ownercontact
+    ) public {
+        warehouse[medicine_id].Warehouse_Id = warehouse_id;    
+        warehouse[medicine_id].Warehouse_Name = warehouse_name;
+        warehouse[medicine_id].Warehouse_Type = warehouse_type;
+        warehouse[medicine_id].Size = size;
+        warehouse[medicine_id].Climate =climate;
+        warehouse[medicine_id].ControlMaintenance = controlmaintenance;
+        warehouse[medicine_id].OwnerContact = ownercontact;
+    }
+
+    function getDetails2(uint256 medicine_id)
+        external
+        view
+        returns (
+            uint,
+            string ,
+            string ,
+            uint256,
+            string ,
+            string ,
+            string
+        )
+    {
+        return (
+            warehouse[medicine_id].Warehouse_Id,
+            warehouse[medicine_id].Warehouse_Name,
+            warehouse[medicine_id].Warehouse_Type,
+            warehouse[medicine_id].Size,
+            warehouse[medicine_id].Climate,
+            warehouse[medicine_id].ControlMaintenance,
+            warehouse[medicine_id].OwnerContact
+        );
+    }    
+
+    
+
+    function setDetails3(
+        uint256 medicine_id,
+        uint256 retailer_id,
+        string retailer_name,
+        string retailer_type,
+        string description,
+        string retaileraddress,
+        string contact
+    ) public {
+        retailer[medicine_id].Retailer_Id = retailer_id;
+        retailer[medicine_id].Retailer_Name = retailer_name;
+        retailer[medicine_id].Retailer_Type = retailer_type;
+        retailer[medicine_id].Description = description;
+        retailer[medicine_id].Address =retaileraddress;
+        retailer[medicine_id].Contact= contact;
+    }
+
+    function getDetails3(uint256 medicine_id)
+        external
+        view
+        returns (
+            uint,
+            string,
+            string,
+            string,
+            string,
+            string
+        )
+    {
+        return (
+            retailer[medicine_id].Retailer_Id,
+            retailer[medicine_id].Retailer_Name,
+            retailer[medicine_id].Retailer_Type,
+            retailer[medicine_id].Description,
+            retailer[medicine_id].Address,
+            retailer[medicine_id].Contact
+        );
+    }
+}

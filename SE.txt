@@ -1,0 +1,229 @@
+import sqlite3
+from web3 import Web3
+import json
+from eth_account.messages import encode_defunct
+ganache_url = "http://127.0.0.1:7545"
+web3 = Web3(Web3.HTTPProvider(ganache_url))
+conn = sqlite3.connect('user_database.db')
+cursor = conn.cursor()
+
+def register(username,role,password):
+    # Check if the username is already taken
+    cursor.execute("SELECT * FROM usersname WHERE username=?", (username,))
+    if cursor.fetchone() is not None:
+        print("Username already exists.")
+        return
+
+    # Insert the new user into the database
+    cursor.execute("INSERT INTO usersname (username,role, password) VALUES (?,?,?)", (username,role,password))
+    conn.commit()
+    print("Registration successful.")
+
+def login(username,role, password):
+    # Check if the username and password match
+    cursor.execute("SELECT * FROM usersname WHERE username=? AND role=? AND password=?", (username,role,password))
+    if cursor.fetchone() is not None:
+        print("Login successful.")
+        if role==1:
+            choice=0
+            while choice != 3:
+                print("1. Set Data (Create Medicine Record)")
+                print("2. Get Data (View Medicine Record)")
+                print("3. Close")
+                choice = int(input("Enter your operation choice: "))
+
+                if choice == 1:
+                    medicine_id = int(input("Enter Medicine ID: "))
+                    manufacturer_id=int(input("Enter Manufacturer_id"))
+                    medicine_name = input("Enter Medicine Name: ")
+                    manufacturer = input("Enter Manufacturer Name: ")
+                    price = int(input("Enter the Price of Medicine: "))
+        # Additional information for counterfeit traceability
+                    manufacturing_date = input("Enter Manufacturing Date: ")
+                    expiration_date = input("Enter Expiration Date: ")
+                    batch_number = int(input("Enter Batch Number: "))
+                
+                    tx = contract.functions.setDetails1(medicine_id,manufacturer_id,medicine_name, manufacturer, price, manufacturing_date,expiration_date, batch_number).transact({'from': from_address})
+                elif choice == 2:
+                    medicine_id = int(input("Enter Medicine ID to view the record: "))
+                    record = contract.functions.getDetails1(medicine_id).call()
+                    if record:
+                        medicine_name, manufacturer, price, manufacturing_date, expiration_date, batch_number = record
+                     #   print("Manufacturer ID:{}".format(manufacturing_id))
+                        print("Medicine ID: {}".format(medicine_id))
+                        print("Medicine Name: {}".format(medicine_name))
+                        print("Manufacturer: {}".format(manufacturer))
+                        print("Price: {}".format(price))
+                        print("Manufacturing Date: {}".format(manufacturing_date))
+                        print("Expiration Date: {}".format(expiration_date))
+                        print("Batch Number: {}".format(batch_number))
+                    else:
+                        print("Medicine Record not found.")
+    
+                elif choice == 3:
+                    break
+                elif choice < 0 and choice > 3:
+                    print("Invalid choice!Enter right choice")
+            # Wait for transaction to be mined
+                    web3.eth.wait_for_transaction_receipt(tx)
+                    print('Medicine Record is created successfully.....')
+        elif role==2:
+            Choice = 0
+            while Choice != 3:
+                print("1. set Data")
+                print("2. Get Data")
+                print("3.close")
+                Choice = int(input("Enter your operation choice:"))
+
+                if Choice == 1:
+                    Medicine_Id = int(input("Enter the medicine_id:"))
+                    warehouse_id = int(input("Enter the warehouse id:"))
+                    warehouse_name = input("Enter the warehouse name:")
+                    warehouse_type = input("Enter the warehouse type:")
+                    size = int(input("Enter the warehouse size:"))
+                    climate = input("enter the warehouse climate:")
+                    controlmaintenance = input("enter the warehouse maintenance:")
+                    ownerContact = input("Enter the warehouse ownerContact:")
+                    TX = contract.functions.setDetails2(Medicine_Id, warehouse_id, warehouse_name, warehouse_type, size,climate, controlmaintenance, ownerContact).transact({'from': from_address})
+                    web3.eth.wait_for_transaction_receipt(TX)
+                    print("Medicine record is created successfully....")
+                if Choice == 2:
+                    Medicine_id = int(input("Enter Medicine ID to view the record: "))
+                    _Record = contract.functions.getDetails2(Medicine_id).call()
+                    if _Record:
+                        warehouse_id, warehouse_name, warehouse_type, size, climate, controlmaintenance, ownerContact = _Record
+                        print("warehouse_id: {}".format(warehouse_id))
+                        print("warehouse_name: {}".format(warehouse_name))
+                        print("warehouse_type: {}".format(warehouse_type))
+                        print("size: {}".format(size))
+                        print("climate: {}".format(climate))
+                        print("controlmaintenance: {}".format(controlmaintenance))
+                        print("ownerContact: {}".format(ownerContact))
+                    else:
+                        print("Record not found.")
+
+                if Choice == 3:
+                    break
+                if Choice<0 and Choice>3:
+                    print("Invalid choice!Enter right choice")
+        elif role==3:
+            _choice=0
+            while _choice != 3:
+                print("1. Set Data (Create Medicine Record)")
+                print("2. Get Data (View Medicine Record)")
+                print("3. Close")
+                _choice = int(input("Enter your operation choice: "))
+
+                if _choice == 1:
+                    Medicine_id = int(input("Enter Medicine ID: "))
+                    Retailer_id= int(input("Enter  Retailer ID: "))
+                    Retailer_name = input("Enter Retailer Name: ")
+                    Retailer_type = input("Enter Retailer Type: ")
+                    Description = input("Enter the Description of medicine: ")
+                    Address = input("Enter the Retailer Address of medicine: ")
+                    Contact=input('Enter the Mobile number of Retailer:')
+
+                    print("demo")
+
+                    Tx = contract.functions.setDetails3(Medicine_id,Retailer_id,Retailer_name,Retailer_type,Description,Address,Contact).transact({'from': from_address})
+
+                    print("demo")
+                    # Wait for transaction to be mined
+                    web3.eth.wait_for_transaction_receipt(Tx)
+                    print('Medicine Record is created successfully.....')
+
+
+                if _choice == 2:
+
+                    Medicine_id = int(input("Enter Medicine ID to view the record: "))
+                    Record = contract.functions.getDetails3(Medicine_id).call()
+                    if Record:
+                        Retailer_id,Retailer_Name,Retailer_Type,Description,Address,Contact = Record
+                        print("Retailer_id: {}".format(Retailer_id))
+                        print("Retailer_Name: {}".format(Retailer_Name))
+                        print("Retailer_Type: {}".format(Retailer_Type))
+                        print("Description: {}".format(Description))
+                        print("Address: {}".format(Address))
+                        print("Contact: {}".format(Contact))
+                    else:
+                        print("Record not found.")
+
+                if _choice == 3:
+                    break
+                if _choice<0 and _choice>3:
+                    print("Invalid choice!Enter right choice")
+        elif role==4:
+            Medicine_Id = int(input("Enter Medicine ID to view the record: "))
+            record = contract.functions.getDetails1(Medicine_Id).call()
+            if record:
+                medicine_name, manufacturer, price, manufacturing_date, expiration_date, batch_number = record
+                print("************************************************************************************************************")
+              #  print("Manufacturer ID:{}".format(manufacturing_id))
+                print("Medicine ID: {}".format(Medicine_Id))
+                print("Medicine Name: {}".format(medicine_name))
+                print("Manufacturer: {}".format(manufacturer))
+                print("Price: {}".format(price))
+                print("Manufacturing Date: {}".format(manufacturing_date))
+                print("Expiration Date: {}".format(expiration_date))
+                print("Batch Number: {}".format(batch_number))
+                print("************************************************************************************************************")
+            else:
+                print("Medicine Record not found.")
+            _Record = contract.functions.getDetails2(Medicine_Id).call()
+            if _Record:
+                warehouse_id, warehouse_name, warehouse_type, size, climate, controlmaintenance, ownerContact = _Record
+                print("************************************************************************************************************")
+                print("warehouse_id: {}".format(warehouse_id))
+                print("warehouse_name: {}".format(warehouse_name))
+                print("warehouse_type: {}".format(warehouse_type))
+                print("size: {}".format(size))
+                print("climate: {}".format(climate))
+                print("controlmaintenance: {}".format(controlmaintenance))
+                print("ownerContact: {}".format(ownerContact))
+                print("************************************************************************************************************")
+            else:
+                print("Record not found.")
+            Record = contract.functions.getDetails3(Medicine_Id).call()
+            if Record:
+                Retailer_id,Retailer_Name,Retailer_Type,Description,Address,Contact = Record
+                print("************************************************************************************************************")
+                print("Retailer_id: {}".format(Retailer_id))
+                print("Retailer_Name: {}".format(Retailer_Name))
+                print("Retailer_Type: {}".format(Retailer_Type))
+                print("Description: {}".format(Description))
+                print("Address: {}".format(Address))
+                print("Contact: {}".format(Contact))
+                print("************************************************************************************************************")
+            else:
+                print("Record not found.")
+    else:
+        print("Invalid username or password.")
+
+def close_database():
+    # Close the database connection
+    conn.close()
+if(web3.is_connected()):
+    web3.eth.defaultAccount = web3.eth.accounts[0]
+    print("demo")
+    contract_address = web3.to_checksum_address("0xE307F21d05731b56D8551252a95f008b1c24EBCe")
+    abi=json.loads('[ 	{ 		"constant": false, 		"inputs": [ 			{ 				"name": "medicine_id", 				"type": "uint256" 			}, 			{ 				"name": "manufacturer_id", 				"type": "uint256" 			}, 			{ 				"name": "medicine_name_", 				"type": "string" 			}, 			{ 				"name": "manufacturer_", 				"type": "string" 			}, 			{ 				"name": "price_", 				"type": "uint256" 			}, 			{ 				"name": "manufacturing_date_", 				"type": "string" 			}, 			{ 				"name": "expiry_date_", 				"type": "string" 			}, 			{ 				"name": "batch_number_", 				"type": "uint256" 			} 		], 		"name": "setDetails1", 		"outputs": [], 		"payable": false, 		"stateMutability": "nonpayable", 		"type": "function" 	}, 	{ 		"constant": false, 		"inputs": [ 			{ 				"name": "medicine_id", 				"type": "uint256" 			}, 			{ 				"name": "warehouse_id", 				"type": "uint256" 			}, 			{ 				"name": "warehouse_name", 				"type": "string" 			}, 			{ 				"name": "warehouse_type", 				"type": "string" 			}, 			{ 				"name": "size", 				"type": "uint256" 			}, 			{ 				"name": "climate", 				"type": "string" 			}, 			{ 				"name": "controlmaintenance", 				"type": "string" 			}, 			{ 				"name": "ownercontact", 				"type": "string" 			} 		], 		"name": "setDetails2", 		"outputs": [], 		"payable": false, 		"stateMutability": "nonpayable", 		"type": "function" 	}, 	{ 		"constant": false, 		"inputs": [ 			{ 				"name": "medicine_id", 				"type": "uint256" 			}, 			{ 				"name": "retailer_id", 				"type": "uint256" 			}, 			{ 				"name": "retailer_name", 				"type": "string" 			}, 			{ 				"name": "retailer_type", 				"type": "string" 			}, 			{ 				"name": "description", 				"type": "string" 			}, 			{ 				"name": "retaileraddress", 				"type": "string" 			}, 			{ 				"name": "contact", 				"type": "string" 			} 		], 		"name": "setDetails3", 		"outputs": [], 		"payable": false, 		"stateMutability": "nonpayable", 		"type": "function" 	}, 	{ 		"constant": true, 		"inputs": [ 			{ 				"name": "medicine_id", 				"type": "uint256" 			} 		], 		"name": "getDetails1", 		"outputs": [ 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "uint256" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "uint256" 			} 		], 		"payable": false, 		"stateMutability": "view", 		"type": "function" 	}, 	{ 		"constant": true, 		"inputs": [ 			{ 				"name": "medicine_id", 				"type": "uint256" 			} 		], 		"name": "getDetails2", 		"outputs": [ 			{ 				"name": "", 				"type": "uint256" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "uint256" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "string" 			} 		], 		"payable": false, 		"stateMutability": "view", 		"type": "function" 	}, 	{ 		"constant": true, 		"inputs": [ 			{ 				"name": "medicine_id", 				"type": "uint256" 			} 		], 		"name": "getDetails3", 		"outputs": [ 			{ 				"name": "", 				"type": "uint256" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "string" 			}, 			{ 				"name": "", 				"type": "string" 			} 		], 		"payable": false, 		"stateMutability": "view", 		"type": "function" 	} ]')
+    contract = web3.eth.contract(address=contract_address, abi=abi)
+
+    from_address="0x8c0290AA93F048912Db4C28Ad766c3EFe4054167"
+    print("Welocome")
+    print('For Registration press 1')
+    print('For login press 2')
+    ch=int(input('enter:'))
+    if ch==1:
+        print('Enter username:')
+        username=input('Username:')
+        print('Enter Role:')
+        role=int(input('1=>Manufacturer 2=>Warehouse 3=>Retailer 4=>Patient:'))
+        password=input("set a password")
+        register(username,role,password)
+    else:
+        Username=input("Username:")
+        print("Role:")
+        Role=int(input('1=>Manufacturer 2=>Warehouse 3=>Retailer 4=>Patient:'))
+        Password=input("Password")
+        login(Username,Role,Password)
